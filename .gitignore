@@ -1,0 +1,11 @@
+.DS_Store
+.env
+.env.*
+.ssh/
+.private/
+*.pem
+*.key
+id_*
+known_hosts*
+tailscaled.state
+__pycache__/
