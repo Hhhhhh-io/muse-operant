@@ -1,9 +1,8 @@
-# 一键配置 Windows 操作端（WinOperator + 可选 CuaDriver + UIA 验收任务）
+# 一键配置 Windows 操作端（WinOperator + CuaDriver + UIA 验收任务）
 # 在目标 Windows 的已登录桌面账号 PowerShell 里运行（不要经 SSH 跑）。
-# 用法：.\setup-windows.ps1 [-InstallCuaDriver] [-ScriptDir "D:\tools\muse-operant"]
+# 用法：.\setup-windows.ps1 [-ScriptDir "D:\tools\muse-operant"]
 # 默认装到 D:\tools\muse-operant（C 盘只给系统用）。
 param(
-    [switch]$InstallCuaDriver,
     [string]$ScriptDir = "D:\tools\muse-operant"
 )
 
@@ -30,25 +29,21 @@ Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Pr
 Start-ScheduledTask -TaskName $taskName
 Write-Host "[2/4] WinOperator 已注册并启动（127.0.0.1:18711）" -ForegroundColor Green
 
-# 3. 可选：装 CuaDriver 到 D 盘（只读界面定位，搭配 WinOperator 用）
-if ($InstallCuaDriver) {
-    Write-Host "[3/4] 正在安装 CuaDriver..." -ForegroundColor Yellow
-    irm https://cua.ai/driver/install.ps1 | iex
-    # 挪到 D 盘
-    $cuaSrc = Join-Path $env:LOCALAPPDATA "Programs\Cua"
-    $cuaDst = "D:\tools\cua-driver"
-    if (Test-Path $cuaSrc) {
-        if (Test-Path $cuaDst) { Remove-Item $cuaDst -Recurse -Force }
-        Copy-Item -Path (Join-Path $env:USERPROFILE ".cua-driver") -Destination (Join-Path $cuaDst "packages") -Recurse -Force -ErrorAction SilentlyContinue
-        # 更新 PATH
-        $userPath = [Environment]::GetEnvironmentVariable("Path", "User")
-        $newPath = ($userPath -split ";" | Where-Object { $_ -notlike "*Cua*" }) -join ";"
-        $newPath = "$newPath;D:\tools\cua-driver\packages\current"
-        [Environment]::SetEnvironmentVariable("Path", $newPath, "User")
-        Write-Host "CuaDriver 已挪到 D:\tools\cua-driver" -ForegroundColor Green
-    }
-} else {
-    Write-Host "[3/4] 跳过 CuaDriver（加 -InstallCuaDriver 可装）" -ForegroundColor Gray
+# 3. 装 CuaDriver 到 D 盘（读界面定位，搭配 WinOperator 用；两个搭配才能发挥到极致）
+Write-Host "[3/4] 正在安装 CuaDriver..." -ForegroundColor Yellow
+irm https://cua.ai/driver/install.ps1 | iex
+# 挪到 D 盘
+$cuaSrc = Join-Path $env:LOCALAPPDATA "Programs\Cua"
+$cuaDst = "D:\tools\cua-driver"
+if (Test-Path $cuaSrc) {
+    if (Test-Path $cuaDst) { Remove-Item $cuaDst -Recurse -Force }
+    Copy-Item -Path (Join-Path $env:USERPROFILE ".cua-driver") -Destination (Join-Path $cuaDst "packages") -Recurse -Force -ErrorAction SilentlyContinue
+    # 更新 PATH
+    $userPath = [Environment]::GetEnvironmentVariable("Path", "User")
+    $newPath = ($userPath -split ";" | Where-Object { $_ -notlike "*Cua*" }) -join ";"
+    $newPath = "$newPath;D:\tools\cua-driver\packages\current"
+    [Environment]::SetEnvironmentVariable("Path", $newPath, "User")
+    Write-Host "CuaDriver 已挪到 D:\tools\cua-driver" -ForegroundColor Green
 }
 
 # 4. 注册 UIA 验收任务（计算器、记事本）
@@ -65,6 +60,4 @@ Write-Host "配置完成！验证方法：" -ForegroundColor Cyan
 Write-Host "  WinOperator: curl http://127.0.0.1:18711/ -X POST -d '{""command"":""ping""}'"
 Write-Host "  计算器： schtasks /run /tn UIA-Calc-Test ，再 type $ScriptDir\result.json"
 Write-Host "  记事本： schtasks /run /tn UIA-Notepad-Test ，再 type $ScriptDir\notepad-result.json"
-if ($InstallCuaDriver) {
-    Write-Host "  CuaDriver: D:\tools\cua-driver\packages\current\cua-driver.exe --version"
-}
+Write-Host "  CuaDriver: D:\tools\cua-driver\packages\current\cua-driver.exe --version"

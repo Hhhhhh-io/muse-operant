@@ -18,13 +18,13 @@ There are 11 commands in total:
 
 **About coordinates**: `click` and `type` use **logical coordinates** (UIA coordinates). A screenshot is in physical pixels — it is only for checking, not for use as coordinates. On the test machine the two differ by about 1.25x.
 
-## Optional: Use CuaDriver to Help Read the Interface
+## Use CuaDriver to Read the Interface (Required)
 
-Native UIA can click and type, but for Chromium-based interfaces (such as QQ and WeChat) it cannot read the full control tree, and coordinates are hard to pin down. In that case you can also install the Windows version of CuaDriver and use it **only to read the interface and to locate things from screenshots**; real clicks and typing still go through WinOperator. The two are used together and do not replace each other.
+Native UIA can click and type, but for Chromium-based interfaces (such as QQ and WeChat) it cannot read the full control tree, and coordinates are hard to pin down. The Windows version of CuaDriver is required: use it **only to read the interface and to locate things from screenshots**; real clicks and typing still go through WinOperator. The two only reach their full potential together, and do not replace each other.
 
 ### Installation (install to the D drive)
 
-Option 1: add `-InstallCuaDriver` when you run the one-click script in step 4 of the deployment guide.
+Option 1: the one-click script installs it by default — no extra flag needed.
 
 Option 2: install manually:
 

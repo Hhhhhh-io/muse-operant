@@ -8,7 +8,7 @@ Send instructions to Muse from your phone or the web, and have it operate your o
 Muse on phone or web
         ↓
 Muse execution environment ── Tailscale private network ── SSH ── Target computer
-                                                ├─ Desktop: macOS uses CuaDriver, Windows uses native UIA (you can also install CuaDriver for read-only UI positioning, paired with WinOperator for clicking and typing)
+                                                ├─ Desktop: macOS uses CuaDriver, Windows uses native UIA + CuaDriver for UI positioning, paired with WinOperator for clicking and typing
                                                 ├─ Chrome CDP for operating web pages
                                                 └─ System commands for working with specific files
 ```
@@ -204,6 +204,6 @@ This project uses the following third-party software:
 | Software | Source | Purpose |
 | --- | --- | --- |
 | Tailscale | [tailscale.com](https://tailscale.com/) | Private network connecting the execution side and the target computer |
-| CuaDriver | [cua.ai](https://cua.ai/) | macOS desktop control operations; optional on Windows for reading the interface |
+| CuaDriver | [cua.ai](https://cua.ai/) | macOS desktop control operations; reads the interface on Windows, paired with WinOperator |
 
 Original content is under the [MIT License](LICENSE). The third-party software above is covered by its own terms and licenses.

@@ -8,7 +8,7 @@
 手机或网页上的 Muse
         ↓
 Muse 的执行环境 ── Tailscale 私有网络 ── SSH ── 目标电脑
-                                                ├─ 桌面：macOS 走 CuaDriver，Windows 走原生 UIA（可另装 CuaDriver 只读界面定位，搭配 WinOperator 点和打字）
+                                                ├─ 桌面：macOS 走 CuaDriver，Windows 走原生 UIA + CuaDriver 读界面定位，搭配 WinOperator 点和打字
                                                 ├─ Chrome CDP 操作网页
                                                 └─ 系统命令处理指定文件
 ```
@@ -204,6 +204,6 @@ SSH 通后，按 [Chrome CDP 接入](docs/chrome-cdp.md) 设置网页直控。�
 | 软件 | 来源 | 用途 |
 | --- | --- | --- |
 | Tailscale | [tailscale.com](https://tailscale.com/) | 私有网络，连接执行端与目标电脑 |
-| CuaDriver | [cua.ai](https://cua.ai/) | macOS 桌面控件操作；Windows 上可选辅助读界面 |
+| CuaDriver | [cua.ai](https://cua.ai/) | macOS 桌面控件操作；Windows 上读界面定位，搭配 WinOperator 使用 |
 
 原创内容采用 [MIT 许可](LICENSE)。上述第三方软件适用各自的条款及许可。
